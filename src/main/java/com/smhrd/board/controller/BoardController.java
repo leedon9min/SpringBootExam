@@ -38,6 +38,14 @@ public class BoardController {
         return "boardMain"; // -> /WEB-INF/views/boardMin.jsp 이동
     }
 
+    // ✅ 추가 : /board/list 매핑 (목록으로 돌아갈 때 404/변환오류 방지)
+    @GetMapping("/board/list")
+    public String list(Model model) {
+        List<Board> list = mapper.list();
+        model.addAttribute("list", list);
+        return "boardMain";
+    }
+
     @GetMapping("/board/form")
     public String formPage(){
 
@@ -76,7 +84,7 @@ public class BoardController {
 
     // @PathVariable: URL경로에서 변수 값을 추출할 때 매개변수에 할당하는 기능
     // ex) localhost:8089/board/1 -> 숫자 1을 uid 변수에 저장
-    @GetMapping("/board/{uid}")
+    @GetMapping("/board/{uid:\\d+}") // ✅ 정규식 추가 -> 숫자만 매칭되도록 변경
     public String detail(@PathVariable("uid") int uid, Model model){
 
         // 2. 기능 수행 -> uid값을 이용해서 해당 게시글 정보를 조회하는 작업
